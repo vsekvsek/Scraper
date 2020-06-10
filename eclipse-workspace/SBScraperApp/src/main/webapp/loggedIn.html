@@ -1,0 +1,84 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Logged in as "${user.email}"</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+<style>
+body{
+    background-image:url('/picts/dez.JPG');
+    background-repeat:no-repeat;
+    background-size: 80%;
+}
+
+.bg__card__navbar{
+	background-color: #000000;
+}
+.bg__card__footer{
+	background-color: #000000 !important;
+}
+#add__new__list{
+    top: -38px;
+    right: 0px;
+}
+.footer { 
+    position: fixed; 
+    bottom: 0; 
+    width: 100%; 
+    height: 55px;
+     background-color: #2C2C2C; 
+}
+</style> 
+<html lang="en"  class="h-100">
+<head>
+<main>
+<body>
+<div class=".container-fluid">
+ <div class="row">
+ <div class="col-sm-4"> </div>
+<div class="col-md-4">
+  
+<h1 class="text-left text-success">Logged in:</h1> 
+<br/>
+
+<div class="col-sm-12">
+<br/>
+
+  <div class="tab-content">
+    <div id="home" class="tab-pane fade in active"> 
+    <p>Login User: <input type="text" th:field="${user.email}" disabled="true" id="email" name="email"/></p>
+    <p>currently saved search word: <input type="text" th:field="${user.searchWord}" disabled="true" id="email" name="email"/></p>
+  <form action="#" th:action="@{/saveUser}" th:object= "${user}" method="get">  	 
+  <input type="text" th:field="${user.email}" hidden="true" id="email" name="email"/>
+  <label for="searchWords">Search Word(s):</label>
+  <input type="text" th:field="*{searchWord}" class="form-control" id="searchWord" placeholder="Enter your key word search" name="searchWord" >    	
+		<button type="submit"  class="pull-right btn btn-block btn-danger" >Save User</button>
+ </form>
+  
+    </div>
+   </div>
+</div>
+</div>
+</div>
+</main>
+</body>
+<!-- Footer -->
+<footer  class="footer" id="footer">
+  <!-- Footer Elements -->
+   <div class="footer-copyright text-center py-3">© 2020 Copyright:
+    <a href="http://www.findmynextbike.com/">Home</a>
+   </div>
+</footer>
+<!-- Footer -->
+
+</html>

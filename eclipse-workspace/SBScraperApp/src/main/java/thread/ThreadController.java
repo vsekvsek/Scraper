@@ -4,9 +4,10 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.Collection;
+import java.sql.Timestamp; 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -28,6 +29,7 @@ public class ThreadController implements Runnable{
 	 String https = "https://";
 	 String mca = ".craigslist.org/search/mca?s=";
 	 String mpa = ".craigslist.org/search/mpa?s=";
+	 String logInfo = "";
 	 	 
 	 public void start () { 
 	      if (t == null) {
@@ -43,6 +45,7 @@ public class ThreadController implements Runnable{
 
 	    
 	 
+	@SuppressWarnings("deprecation")
 	public void run() { 
 		 
 		   try {
@@ -51,29 +54,39 @@ public class ThreadController implements Runnable{
 			    
 			   for(String aCity : cities) {
 				   count++;
-			   System.out.print(" Thread " +  threadName + " for city "+ aCity +" is currently on "  + count + " for " +size+ "\n"); 
-			   scrapeForCity(aCity,aMySQLDB); 
+				   //String   msg = " Thread " +  threadName + " for city "+ aCity +" is currently on "  + count + " for " +size+ "\n";
+				   setLogInfo(aCity,count,size);
+				   System.out.print(getLogInfo()); 
+				   //Logger.getLogger (ThreadController.class.getName()).log(Level.INFO, getLogInfo());
+				   scrapeForCity(aCity,aMySQLDB); 
 			   }
 		   }
 		   finally {
-			   System.out.print(" Finished Thread " +  threadName +  "\n"); 
+			   Logger.getLogger (ThreadController.class.getName()).log(Level.INFO, " Finished Thread " +  threadName +  "\n");
+			   System.out.print(" Finished Thread " +  threadName +  "\n");  
 		   } 
 	   }
 	   
-	   private void scrapeForCity(String aCity, ScraperMqSQL aMySQLDB2) {
+	   private String getLogInfo() {
+		return logInfo;
+	}
+	private void setLogInfo(String aCity, int count, int size) {
+		   logInfo = " Thread " +  threadName + " for city "+ aCity +" is currently on "  + count + " for " +size+ "\n";
+	}
+	private synchronized void scrapeForCity(String aCity, ScraperMqSQL aMySQLDB2) {
 		   	deleteForCity(aCity,aMySQLDB);
 			scrapeFor(aCity,aMySQLDB);
 			scrapeForParts( aMySQLDB, aCity);
 			   
 	}
 	   
-	   private void deleteForCity(String aCity, ScraperMqSQL aMySQLDB) {
+	   private synchronized  void deleteForCity(String aCity, ScraperMqSQL aMySQLDB) {
 			aMySQLDB.deleteFor(aCity);
 			aMySQLDB.deletePartsFor(aCity);
 		}
 	   
 	   
-		private void scrapeFor(String aCity,ScraperMqSQL aMySQLDB) {
+		private synchronized  void scrapeFor(String aCity,ScraperMqSQL aMySQLDB) {
 			try { 
 				System.setProperty("http.proxyHost", "192.168.5.1");
 				System.setProperty("http.proxyPort", "1080");
@@ -119,13 +132,11 @@ public class ThreadController implements Runnable{
 				if(isElementValid(anElement)) {
 					String aUrl ="";
 					String price ="";
-					String description ="";
-					String picture = "";
+					String description =""; 
 					for(Element eachATag : anElement.getElementsByTag("a")) {
 
 						if(isTagValid(eachATag.text())) { 
-							aUrl = getHttps(eachATag.parentNode().childNodes()); 
-							picture = getPicture(eachATag.parentNode().childNodes());
+							aUrl = getHttps(eachATag.parentNode().childNodes());  
 							if(price.isEmpty()) {
 								price = eachATag.text();
 							}else {
@@ -139,7 +150,7 @@ public class ThreadController implements Runnable{
 					} 
 					 try {
 						//  if(urlMap.get(aUrl) == null) {
-							 	saveAsScrapedObject(aUrl ,price,description, aMySQLDB,aCurrentCity, picture);
+							 	saveAsScrapedObject(aUrl ,price,description, aMySQLDB,aCurrentCity);
 							 	
 					//	  }
 					} catch (SQLException e) {
@@ -185,7 +196,7 @@ public class ThreadController implements Runnable{
 			return "";
 		}
 		
-		private void saveAsScrapedObject(String aUrl, String price, String description, ScraperMqSQL aMySQLDB, String currentCity, String aPict) throws SQLException {
+		private synchronized void saveAsScrapedObject(String aUrl, String price, String description, ScraperMqSQL aMySQLDB, String currentCity) throws SQLException {
 			ScraperObject aNewScrapedObject = new ScraperObject();
 			Timestamp time = new Timestamp(System.currentTimeMillis()); 
 			if(userDeletedPost(aUrl)) {
@@ -211,7 +222,7 @@ public class ThreadController implements Runnable{
 		 
 		}
 		
-		private ResultSet getExistingDescription(ScraperMqSQL aSQLDB, String aDescription, String currentCity, String aTable) {
+		private synchronized ResultSet getExistingDescription(ScraperMqSQL aSQLDB, String aDescription, String currentCity, String aTable) {
 			 
 			ResultSet dbObject = null; 
 			try {
@@ -224,7 +235,7 @@ public class ThreadController implements Runnable{
 		}
 		 
 
-		private ResultSet getExistingUrl(ScraperMqSQL aSQLDB, String aUrl) {
+		private synchronized ResultSet getExistingUrl(ScraperMqSQL aSQLDB, String aUrl) {
 			ResultSet dbObject = null;
 			try {
 				dbObject = aSQLDB.doesUrlExist(aUrl);
@@ -234,7 +245,7 @@ public class ThreadController implements Runnable{
 			
 			return  dbObject;
 		}
-		private void outputPartsData(Document doc, String aCurrentCity,ScraperMqSQL aMySQLDB) {
+		private synchronized void outputPartsData(Document doc, String aCurrentCity,ScraperMqSQL aMySQLDB) {
 			Elements elementList = doc.select("ul.rows");
 			Elements rows = elementList.select("li");			 
 			if(rows.isEmpty()) {			
@@ -276,7 +287,7 @@ public class ThreadController implements Runnable{
 
 		}
 		
-		private void scrapeForParts(ScraperMqSQL aMySQLDB, String aCity) {
+		private synchronized  void scrapeForParts(ScraperMqSQL aMySQLDB, String aCity) {
 
 			try { 
 				System.setProperty("http.proxyHost", "192.168.5.1");
@@ -305,7 +316,7 @@ public class ThreadController implements Runnable{
 			
 		}
 		
-		private void saveAsScrapedPartsObject(String aUrl, String price, String description, ScraperMqSQL aMySQLDB, String currentCity, String aPict) throws SQLException {
+		private synchronized void saveAsScrapedPartsObject(String aUrl, String price, String description, ScraperMqSQL aMySQLDB, String currentCity, String aPict) throws SQLException {
 			ScraperObject aNewScrapedObject = new ScraperObject();
 			Timestamp time = new Timestamp(System.currentTimeMillis()); 
 			if(userDeletedPost(aUrl)) {
@@ -327,7 +338,7 @@ public class ThreadController implements Runnable{
 			 
 		}
 		
-		private boolean userDeletedPost(String url) {
+		private synchronized boolean userDeletedPost(String url) {
 			System.setProperty("http.proxyHost", "192.168.5.1");
 			System.setProperty("http.proxyPort", "1080");
 			try {

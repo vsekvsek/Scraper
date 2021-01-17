@@ -64,7 +64,11 @@ public class States {
 	 	cityList.addAll(getWashington());
 		cityList.addAll(getOregon());
 		cityList.addAll(getIdaho());
-		cityList.addAll(getMontana());
+		return cityList;
+	}
+	public List<String> getWesternCities2(){
+		List<String> cityList = Collections.synchronizedList(new ArrayList<String>());
+	 	cityList.addAll(getMontana());
 		cityList.addAll(getCalifornia()); 
 		return cityList;
 	}
@@ -76,10 +80,20 @@ public class States {
 		cityList.addAll(getUtah());	 
 		cityList.addAll(getColorado());
 		cityList.add("wyoming");
-		cityList.addAll(getNewMexico());
+		cityList.addAll(getNewMexico());		
+		return cityList;
+	}
+	public List<String> getMidWesternCities2(){
+		List<String> cityList = Collections.synchronizedList(new ArrayList<String>());	 	
+	
 		cityList.addAll(getTexas());
 		cityList.addAll(getOaklahoma());
-		cityList.addAll(getKansas());
+		cityList.addAll(getKansas()); 	 
+		return cityList;
+	}
+	
+	public List<String> getMidWesternCities3(){
+		List<String> cityList = Collections.synchronizedList(new ArrayList<String>());	 	
 		cityList.addAll(getSouthDakota());
 		cityList.addAll(getNorthDakota());
 		cityList.addAll(getNebraska());
@@ -96,6 +110,11 @@ public class States {
 		cityList.addAll(getWisconsin());
 		cityList.addAll(getIllinois());
 		cityList.addAll(getMississippi());		
+		
+		return cityList;
+	}
+	public List<String> getMidAtlanticCities2(){
+		List<String> cityList = Collections.synchronizedList(new ArrayList<String>());  
 		cityList.addAll(getMichigan());
 		cityList.addAll(getIndiana());
 		cityList.addAll(getKentucky());
@@ -105,7 +124,6 @@ public class States {
 		cityList.addAll(getGeorgia());		 
 		return cityList;
 	}
-	
 	public List<String> getEasternCities(){
 		List<String> cityList = Collections.synchronizedList(new ArrayList<String>());
 		cityList.addAll(getFlorida());
@@ -117,9 +135,17 @@ public class States {
 		cityList.addAll(getDC());
 		cityList.addAll(getNJ());
 		cityList.addAll(getPennylvania());
+		return cityList;
+	}
+	public List<String> getEasternCities2(){
+		List<String> cityList = Collections.synchronizedList(new ArrayList<String>());
 		cityList.addAll(getNewYork());
 		cityList.addAll(getConnecticut());
-		cityList.addAll(getMassachusetts());
+		cityList.addAll(getMassachusetts()); 
+		return cityList;
+	}
+	public List<String> getEasternCities3(){
+		List<String> cityList = Collections.synchronizedList(new ArrayList<String>());
 		cityList.addAll(getRhodeIsland());
 		cityList.addAll(getVermont());		
 		cityList.addAll(getNewHampshire());

@@ -1,5 +1,5 @@
 package model;
-
+ 
 public class User {
 	public String email;
 	private String firstName;

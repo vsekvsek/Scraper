@@ -2,36 +2,22 @@ package model;
 
 import java.util.UUID;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-
-@Entity
+import org.springframework.beans.factory.annotation.Autowired;
+ 
 public class ScraperObject {
 
 	//private long id;
 	//private String name;
 
-
-	//private boolean active;
-	@Id
-	@GeneratedValue
-	@Column(name="url")
-	private String url;
-	@Column(name="description")
-	private String description;
-	@Column(name="price")
-	private String price;
-	@Column(name="location")
-	public String location;
-	@Column(name="state")
-	public String state;
-	@Column(name="date")
-	public String date;
-	@Column(name="deactivatedBoolean")
+  
 	public boolean deactivatedBoolean;
 	public UUID guid;
+	private String url;
+	private String price;
+	private String description;
+	private String location;
+	private String state;
+	private String date;
 	public void setUrl(String aUrl) {	
 		url =aUrl;	}
 	public String getUrl() {

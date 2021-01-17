@@ -1,9 +1,8 @@
 package com.controller;
 
-
-import java.sql.SQLException;
-
-
+import org.springframework.beans.factory.BeanFactory; 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -15,6 +14,7 @@ import com.repository.ScraperMqSQL;
 
 import model.Credentials;
 import model.User;
+import model.UserDao;
 
 @Controller
 public class HomeController {
@@ -75,17 +75,27 @@ public class HomeController {
 		return "notify";
 		}
 	
+	@SuppressWarnings("deprecation")
 	@RequestMapping(value = "/saveUser" ) 
 	public String saveUser(User aUser, ModelMap model) {
-		ScraperMqSQL aDb = new ScraperMqSQL();
-		boolean myBooleanVariable = false;
+	 	
+		SessionFactory factory; 
 		try {
-			aDb.saveUser(aUser);
-		} catch (SQLException e) { 
-			e.printStackTrace();
-		}
+	         factory = new Configuration().configure().buildSessionFactory();
+	      } catch (Throwable ex) { 
+	         System.err.println("Failed to create sessionFactory object." + ex);
+	         throw new ExceptionInInitializerError(ex); 
+	      }
+	      
+	     	       
+	    UserDao dao=(UserDao)((BeanFactory) factory).getBean("user");  
+	       
+	    dao.saveUser(aUser);  
+		
+		 
 		model.addAttribute("user", aUser);
-		model.addAttribute("myBooleanVariable", myBooleanVariable);
+		model.addAttribute("myBooleanVariable", true);
+		 
 	    return "loggedIn"; 
 	}
 	

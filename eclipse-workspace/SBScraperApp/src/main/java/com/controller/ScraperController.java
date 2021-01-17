@@ -15,7 +15,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
-import org.jsoup.select.Elements; 
+import org.jsoup.select.Elements;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +29,7 @@ import model.States;
 import thread.ThreadController;
  
 @RestController
+@EnableScheduling
 public class ScraperController extends Thread {
 	int scrapeCount =0;
 	String mozilla = "Mozilla/17.0";
@@ -37,15 +40,20 @@ public class ScraperController extends Thread {
 	HashMap<String, ScraperObject> urlPartsMap = new HashMap<String, ScraperObject>();
 	HashMap<String, ScraperObject> urlMapToDelete = new HashMap<String, ScraperObject>();
 	
-  @RequestMapping(value ="/scrape")
-	public String start( ModelMap model) throws InterruptedException {		
+  @RequestMapping(value ="/scrape") 
+	public void start( ModelMap model) throws InterruptedException {		
+		startScraping();
+	}
+
+  @Scheduled(cron="* * 19 * * WED")
+	private String startScraping() throws InterruptedException {
 		System.out.print("Started scraping... "  +"\n");
 		ScraperMqSQL aMySQLDB = null;
 		aMySQLDB = new ScraperMqSQL();
 		aMySQLDB.connect(); 
-		fetchData(aMySQLDB,model);
+		fetchData(aMySQLDB);
 		return scrapeCount + " total scraped.";
-	}
+}
 
 	private void deactivateDefunctUrls(ScraperMqSQL aMySQLDB, ScraperObject scrapedObject) {
 		int cntr = 0;
@@ -94,21 +102,43 @@ public class ScraperController extends Thread {
 	}
 
 	 
-	private void fetchData(ScraperMqSQL aMySQLDB,ModelMap model) throws InterruptedException   { 
+	private void fetchData(ScraperMqSQL aMySQLDB) throws InterruptedException   { 
 		States states = new States();   
-		ThreadController R1 = new ThreadController( "Pacific Cities", states.getWesternCities(),aMySQLDB);
+		ThreadController R1 = new ThreadController( "Western Cities", states.getWesternCities(),aMySQLDB);
 		R1.start(); 	
-		Thread.sleep(40000);	      
-		ThreadController R2 = new ThreadController( "Mid Western Cities", states.getMidWesternCities(),aMySQLDB);
-		R2.start();
+		Thread.sleep(40000);
+		ThreadController R2 = new ThreadController( "Western Cities 2", states.getWesternCities2(),aMySQLDB);
+		R2.start(); 	
 		Thread.sleep(40000);	
-		ThreadController R3 = new ThreadController( "Mid Atlantic Cities", states.getMidAtlanticCities(),aMySQLDB);
+	 	ThreadController R3 = new ThreadController( "Mid Western Cities", states.getMidWesternCities(),aMySQLDB);
 		R3.start();
 		Thread.sleep(40000);	
-		ThreadController R4 = new ThreadController( "Eastern Cities", states.getEasternCities(),aMySQLDB);
-		R4.start(); 
-  
-		System.out.print("Finished "   +"\n");
+		ThreadController R4 = new ThreadController( "Mid Western Cities 2", states.getMidWesternCities2(),aMySQLDB);
+		R4.start();
+		Thread.sleep(40000);	
+		ThreadController R5 = new ThreadController( "Mid Atlantic Cities", states.getMidAtlanticCities(),aMySQLDB);
+		R5.start();
+		Thread.sleep(40000);	
+		ThreadController R6 = new ThreadController( "Mid Atlantic Cities 2", states.getMidAtlanticCities2(),aMySQLDB);
+		R6.start();
+		Thread.sleep(40000);
+		ThreadController R7 = new ThreadController( "Eastern Cities", states.getEasternCities(),aMySQLDB);
+		R7.start(); 
+		Thread.sleep(40000);
+		ThreadController R8 = new ThreadController( "Eastern Cities 2", states.getEasternCities2(),aMySQLDB);
+		R8.start();
+		
+		Thread.sleep(40000);
+		ThreadController R9 = new ThreadController( "Eastern Cities 3", states.getEasternCities3(),aMySQLDB);
+		R9.start();
+		
+		Thread.sleep(40000);
+		ThreadController R10 = new ThreadController( "Midwestern Cities 2", states.getMidWesternCities3(),aMySQLDB);
+		R10.start();
+		 
+	 
+		 
+    
 	}
 	
 	private void deleteForCity(String aCity, ScraperMqSQL aMySQLDB) {

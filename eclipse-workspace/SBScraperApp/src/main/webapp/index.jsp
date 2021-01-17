@@ -1,13 +1,16 @@
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<!DOCTYPE html>
+<html lang="en"  class="h-100">
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> 
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> 
-<link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/dataTables.bootstrap4.min.css"> 
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css"> 
 <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-
-<style>
+<script src="https://cdn.datatables.net/searchbuilder/1.0.1/js/dataTables.searchBuilder.min.js"></script> 
+<script src=http://live.datatables.net/juvedeva/1/edit></script>  
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.23/sb-1.0.1/datatables.min.css"/>  
+ 
+ <style>
+ 
 body{
     background-image:url('https://cdn.pixabay.com/photo/2016/03/27/17/59/vintage-1283299_960_720.jpg');
     background-repeat:no-repeat;
@@ -32,10 +35,14 @@ body{
      background-color: #2C2C2C; 
 }
 </style>
+  
+<body>
+ 
 <script>
 	$(document).ready( function () {
-		 var table = $('#scrapedTable').DataTable({
-				"sAjaxSource": "/scraped",
+		 var table = $('#scrapedTable').DataTable({ 
+			 dom: 'Qfrtip',  
+			  	"sAjaxSource": "/scraped",
 				"sAjaxDataProp": "",
 				"order" : [ [ 3, 'asc' ] ],
 				"aoColumns": [
@@ -50,6 +57,7 @@ body{
 					  { "mData": "state" }
 				]
 		 })
+		 deferRender: true
 	});
 	
 	function changeType(){
@@ -59,9 +67,7 @@ body{
 
   }
 	</script>
-	<!DOCTYPE html>
-<html lang="en"  class="h-100">
-<body>
+ 
 <!---->
 <nav class="navbar navbar-expand-md bg-dark navbar-dark">
   <a class="navbar-brand" style="font-size:300%;" href="http://www.findmynextbike.com/">Find my next Ride </a>
@@ -72,6 +78,7 @@ body{
    <div title="Choose state to filter by">       
       <h4> <span >Filter by States:
       <select name='scrapedTableSelector'id='scrapedTableId' onChange=changeType()>
+      <option value="Choose state to filter by"> </option>
       <option value=""> </option>
       <option  value="AZ">Arizona</option>
       <option value="AL">Alabama</option>

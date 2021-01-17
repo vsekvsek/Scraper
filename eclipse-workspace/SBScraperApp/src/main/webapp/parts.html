@@ -1,14 +1,18 @@
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<!DOCTYPE html>
+<html lang="en"  class="h-100">
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> 
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> 
-<link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/dataTables.bootstrap4.min.css"> 
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
 <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-
-<style>
-body{
+<script src="https://cdn.datatables.net/searchbuilder/1.0.1/js/dataTables.searchBuilder.min.js"></script>
+ <script src=http://live.datatables.net/juvedeva/1/edit></script> 
+ <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.23/sb-1.0.1/datatables.min.js"></script>
+ <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.23/sb-1.0.1/datatables.min.css"/>
+ <style>
+ 
+ body{
+  
     background-image:url('/picts/camp.jpg');
     background-repeat:no-repeat;
     background-size: 100%;
@@ -31,10 +35,13 @@ body{
     height: 55px;
      background-color: #2C2C2C; 
 }
-</style>
+</style> 
+<body>
+ 
 <script>
 	$(document).ready( function () {
 		 var table = $('#scrapedTable').DataTable({
+			 dom: 'Qfrtip', 
 				"sAjaxSource": "/partsData",
 				"sAjaxDataProp": "",
 				"order" : [ [ 3, 'asc' ] ],
@@ -50,6 +57,7 @@ body{
 					  { "mData": "state" }
 				]
 		 })
+		 deferRender: true
 	});
 	
 	function changeType(){
@@ -57,10 +65,8 @@ body{
         var selectedValue = document.getElementById("scrapedTableId").value;           
         $(dataTableId).dataTable().fnFilter(selectedValue , 4, true, false, false, false);
 
-  }
-	</script>
-	<!DOCTYPE html>
-<html lang="en"  class="h-100">
+  } 
+</script>
 <body>
 <!---->
 <nav class="navbar navbar-expand-md bg-dark navbar-dark">
@@ -154,9 +160,7 @@ body{
 
 <footer  class="footer" id="footer">>
     <ul class="btn btn-outline-white btn-rounded">
-      <li>
-        <a th:href="@{notify}" class="btn btn-outline-white btn-rounded">Sign up for notifications!</a>
-      </li>
+     
     </ul>
 </footer>
 </body>
